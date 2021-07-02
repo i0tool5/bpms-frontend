@@ -26,7 +26,17 @@ export default {
         }
       })
     },
-
+    loginReq: async function (url = '', data = {}) {
+      return await fetch(this.defaultLocation + url, {
+        mode: 'cors',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(data)
+      })
+    },
     postReq: async function (url = '', data = {}) {
       return await fetch(this.defaultLocation + url, {
         mode: 'cors',
@@ -39,7 +49,6 @@ export default {
         body: JSON.stringify(data)
       })
     },
-
     deleteReq: async function (url = '') {
       return fetch(this.defaultLocation + url, {
         mode: 'cors',

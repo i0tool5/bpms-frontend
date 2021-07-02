@@ -18,7 +18,13 @@
     </div>
     <div>
       <label>Статус</label>
-      <input v-model="deal.status" type="text" name="status">
+      <select v-model="deal.status">
+        <option
+          v-for="status in statuses"
+          :key="status.uid"
+          :value="status.uid">{{ status.name }}</option>
+      </select>
+      <!-- <input v-model="deal.status" type="text" name="status"> -->
     </div>
     <div>
       <label>Ответственное лицо</label>
@@ -45,6 +51,7 @@ export default {
   data () {
     return {
       users: [],
+      statuses: [],
       deal: {
         name: '',
         payment: 10000,
@@ -75,6 +82,17 @@ export default {
         }
       })
     }
+    this.getReq('/statuses').then(resp => {
+      if (resp.status === 200) {
+        return resp.json()
+      } else {
+        return null
+      }
+    }).then(json => {
+      if (json !== null) {
+        this.statuses = json.results
+      }
+    })
   },
   methods: {
     sendFormData: function () {

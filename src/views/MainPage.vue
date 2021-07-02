@@ -54,9 +54,9 @@ export default {
       setTimeout(() => { this.unexpecterErr = false }, 7000)
     },
     sendForm: function () {
-      this.postReq('/login', this.creds)
+      this.loginReq('/login', this.creds)
         .then(resp => {
-          if (resp.status === 400) {
+          if (resp.status !== 200) {
             this.error = true
             return {}
           } else {

@@ -11,7 +11,8 @@ const state = {
   tasks: [],
   companies: [],
   contacts: [],
-  users: []
+  users: [],
+  deal_statuses: [],
 }
 
 const getters = {
@@ -22,7 +23,8 @@ const getters = {
   tasks: state => state.tasks,
   companies: state => state.companies,
   contacts: state => state.contacts,
-  users: state => state.users
+  users: state => state.users,
+  statuses: state => state.deal_statuses,
 }
 
 const mutations = {

@@ -67,6 +67,7 @@ export default {
       if (b > e) {
         return false
       }
+      return true
     },
     sendFormData: function () {
       if (this.validateDate(this.proj.begin_date, this.proj.end_date)) {
