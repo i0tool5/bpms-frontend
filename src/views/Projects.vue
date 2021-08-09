@@ -199,7 +199,6 @@ export default {
       this.newTask = el
     },
     sendTask: function () {
-      console.log('Projects.vue:', this.newTask, '<<-')
       this.postReq('/tasks/', this.newTask)
         .then(resp => {
           if (resp.status === 201) {

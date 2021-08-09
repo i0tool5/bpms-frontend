@@ -19,9 +19,15 @@
             <tbody>
               <tr>
                 <td>Новое имя пользователя:</td>
-                <td><input type="text"></td>
+                <td><input v-model="newUsername" type="text"></td>
               </tr>
             </tbody>
+            <input @click="changeLogin"
+                type="button"
+                name="snd-btn"
+                value="Отправить"
+                class="button btn-green w-100"
+            >
           </table>
         </div>
         <div id="password-settings">
@@ -32,7 +38,8 @@
                 <tr>
                   <td>Новый пароль:</td>
                   <td>
-                    <input :class="'w-100'" type="password" v-model="passChange.new_password">
+                    <input :class="'w-100'" type="password"
+                      v-model="passChange.new_password">
                   </td>
                 </tr>
                 <tr>
@@ -64,6 +71,7 @@ export default {
   data () {
     return {
       user: {},
+      newUsername: '',
       passChange: {
         old_password: '',
         new_password: ''
@@ -89,7 +97,23 @@ export default {
   },
   methods: {
     changePass: function () {
-      this.updateReq('/users/profile/change_password', this.passChange)
+      this.postReq('/users/profile/change_password/', this.passChange)
+    },
+    changeLogin: function () {
+      this.postReq('/users/profile/change_login/',
+        { new_name: this.newUsername }
+      ).then(resp => {
+        if (resp.status !== 200) {
+          return {}
+        }
+        return resp.json()
+      })
+        .then(json => {
+          if (json === {}) {
+            // TODO: handle with popup or something like that
+            console.error('Oh, that should be handled!')
+          }
+        })
     }
   }
 }
