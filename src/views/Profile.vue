@@ -4,22 +4,42 @@
       <div>
         <p>Последний вход в систему: <strong>{{ accDate }}</strong></p>
         <table>
+          <tr>
+            <th>Количество созданных проектов</th>
+            <td>{{ user.user_projects }}</td>
+          </tr>
+          <tr>
+            <th>Количество созданных сделок</th>
+            <td>{{ user.user_deals }}</td>
+          </tr>
+          <tr>
+            <th>Количество назначенных сделок</th>
+            <td>{{ user.user_assigned_deals }}</td>
+          </tr>
+          <tr>
+            <th>Количество созданных задач</th>
+            <td>{{ user.user_tasks }}</td>
+          </tr>
+            <th>Количество назначенных задач</th>
+            <td>{{ user.user_assigned_tasks }}</td>
+          <tr>
+          </tr>
         </table>
-        <p>Количество созданных проектов: <span>{{ user.user_projects }}</span></p>
-        <p>Количество созданных сделок: <span>{{ user.user_deals }}</span></p>
-        <p>Количество назначенных сделок: <span>{{ user.user_assigned_deals }}</span></p>
-        <p>Количество созданных задач: <span>{{ user.user_tasks }}</span></p>
-        <p>Количество назначенных задач: <span>{{ user.user_assigned_tasks }}</span></p>
       </div>
       <div id="profile-settings">
         <h1>Изменение профиля</h1>
         <div>
           <h2>Изменить имя пользователя</h2>
+          <span
+            v-show="showError"
+          >Произошла ошибка: {{ errText }}</span>
           <table>
             <tbody>
               <tr>
                 <td>Новое имя пользователя:</td>
-                <td><input v-model="newUsername" type="text"></td>
+                <td>
+                  <input style="text-align:center;" v-model="newUsername" type="text">
+                </td>
               </tr>
             </tbody>
             <input @click="changeLogin"
@@ -75,7 +95,9 @@ export default {
       passChange: {
         old_password: '',
         new_password: ''
-      }
+      },
+      errText: '',
+      showError: false
     }
   },
   mixins: [
@@ -104,17 +126,41 @@ export default {
         { new_name: this.newUsername }
       ).then(resp => {
         if (resp.status !== 200) {
-          return {}
+          const x = {}
+          const json = resp.json()
+          json.then(dat => { x.errors = dat })
+          var prom = new Promise((resolve, reject) => {
+            setTimeout(() => {
+              resolve(x)
+            }, 300)
+          })
+          return prom
         }
         return resp.json()
       })
         .then(json => {
-          if (json === {}) {
-            // TODO: handle with popup or something like that
-            console.error('Oh, that should be handled!')
+          if (json.errors) { // TODO: handle error more efficiently
+            console.log(json.errors)
+            var k = String
+            for (k in json.errors) {
+              this.errText += json.errors[k].join('.')
+            }
+            this.showError = true
+            setTimeout(
+              _ => {
+                this.errText = ''
+                this.showError = false
+              }, 6000
+            )
           }
         })
     }
   }
 }
 </script>
+
+<style scoped>
+.error {
+  background-color: red;
+}
+</style>

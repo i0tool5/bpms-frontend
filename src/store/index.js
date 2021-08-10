@@ -24,6 +24,9 @@ const getters = {
   companies: state => state.companies,
   contacts: state => state.contacts,
   users: state => state.users,
+  getUserIndexByLogin: (state) => (login) => {
+    return state.users.findIndex(user => user.username === login)
+  },
   statuses: state => state.deal_statuses
 }
 
