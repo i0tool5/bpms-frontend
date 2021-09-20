@@ -27,6 +27,9 @@ const getters = {
   getUserIndexByLogin: (state) => (login) => {
     return state.users.findIndex(user => user.username === login)
   },
+  getUserIndexByPK: (state) => (pk) => {
+    return state.users.findIndex(user => Number(user.pk) === Number(pk))
+  },
   statuses: state => state.deal_statuses
 }
 

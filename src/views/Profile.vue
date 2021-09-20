@@ -1,6 +1,6 @@
 <template>
     <div>
-      <h1>Ваш профиль, {{ user.username }}</h1>
+      <h1>Ваш профиль, <i>{{ user.username }}</i></h1>
       <div>
         <p>Последний вход в систему: <strong>{{ accDate }}</strong></p>
         <table>
@@ -124,23 +124,23 @@ export default {
     changeLogin: function () {
       this.postReq('/users/profile/change_login/',
         { new_name: this.newUsername }
-      ).then(resp => {
-        if (resp.status !== 200) {
-          const x = {}
-          const json = resp.json()
-          json.then(dat => { x.errors = dat })
-          var prom = new Promise((resolve, reject) => {
-            setTimeout(() => {
-              resolve(x)
-            }, 300)
-          })
-          return prom
-        }
-        return resp.json()
-      })
+      )
+        .then(resp => {
+          if (resp.status !== 200) {
+            const x = {}
+            const json = resp.json()
+            json.then(dat => { x.errors = dat })
+            var prom = new Promise((resolve, reject) => {
+              setTimeout(() => {
+                resolve(x)
+              }, 300)
+            })
+            return prom
+          }
+          return resp.json()
+        })
         .then(json => {
           if (json.errors) { // TODO: handle error more efficiently
-            console.log(json.errors)
             var k = String
             for (k in json.errors) {
               this.errText += json.errors[k].join('.')
@@ -152,6 +152,10 @@ export default {
                 this.showError = false
               }, 6000
             )
+          } else {
+            // TODO: update user in store
+            this.newUsername = ''
+            this.user.username = json.username
           }
         })
     }
